@@ -1,0 +1,75 @@
+# Ignore the model directory
+/roBERTa-model/
+
+# Ignore the database files
+*.sqlite3
+*.db
+
+# Ignore environment variables file
+.env
+
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore Jupyter Notebooks checkpoints
+.ipynb_checkpoints
+
+# Ignore virtual environment directory
+venv/
+env/
+.venv/
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore log files and databases
+*.log
+*.sql
+
+# Ignore compiled C extensions
+*.so
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Linux system files
+*.swp
+
+# Ignore Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+wheels/
+*.manifest
+*.spec
+
+# Ignore coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Ignore Sphinx documentation
+docs/_build/
+
+# Ignore mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ignore pyre type checker
+.pyre/

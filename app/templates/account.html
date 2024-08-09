@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block content %}
+<header class="app-header">
+  <h1 class="app-title">Hate Speech Detection in X/Twitter accounts</h1>
+</header>
+<main
+  class="col-md-6 mx-auto d-flex justify-content-center align-items-center"
+  style="min-height: 100vh"
+>
+  <form method="POST" action="" novalidate class="card p-4 shadow">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+      <label for="account" class="form-label"
+        >Please enter an account handler?</label
+      >
+      {{ form.account(class="form-control", id="account", size=30
+      ,placeholder="@username") }} {% if message %}
+      <div class="invalid-feedback d-block">{{ message }}</div>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Classify</button>
+  </form>
+</main>
+
+{% endblock %}

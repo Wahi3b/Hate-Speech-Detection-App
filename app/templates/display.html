@@ -1,0 +1,160 @@
+{% extends "base.html" %} {% block head %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='main.css') }}"
+/>
+
+{% endblock %} {% block content %}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<div class="custom-container text-center">
+  <header class="profile-header">
+    <div class="avatar-container">
+      <img
+        src="{{ url_for('static', filename='user_images/' ~ account.account_handler ~ '_image.jpg') }}"
+        alt="Profile Image of {{ account.account_handler }}"
+        class="profile-img"
+      />
+    </div>
+    <div class="user-info">
+      <h1 class="user-name">{{ account.account_name }}</h1>
+      <h2 class="username">@{{ account.account_handler }}</h2>
+      <p class="followers">
+        Followers: {{ "{:.1f}M".format(account.account_followers / 1_000_000) if
+        account.account_followers >= 1_000_000 else
+        "{:.1f}K".format(account.account_followers / 1_000) if
+        account.account_followers >= 1000 else account.account_followers }}
+      </p>
+      <p class="following">
+        Following: {{ "{:.1f}M".format(account.account_following / 1_000_000) if
+        account.account_following >= 1_000_000 else
+        "{:.1f}K".format(account.account_following / 1_000) if
+        account.account_following >= 1000 else account.account_following }}
+      </p>
+    </div>
+    <p class="user-status">
+      Classified a total number of {{account.neutral_tweets +
+      account.hateful_tweets }} tweets, {{account.hateful_tweets }} contain hate
+      speech. The account is profiled as
+      <span
+        class="{{ 'status-neutral' if account.account_classification == 'Neutral' else 'status-hateful' }}"
+      >
+        {{ account.account_classification }}
+      </span>
+    </p>
+  </header>
+
+  <div class="chart-box my-4">
+    <canvas id="tweetChart"></canvas>
+  </div>
+  {%if hate_metrics %}
+  <div>
+    <p class="metrics-text user-status">
+      Hateful tweets have accumulated a total number of:<br />
+      <span class="metric likes"
+        ><i class="fas fa-heart icon"></i>{{
+        "{:.1f}M".format(hate_metrics["likes"] / 1_000_000) if
+        hate_metrics["likes"] >= 1_000_000 else
+        "{:.1f}K".format(hate_metrics["likes"] / 1_000) if hate_metrics["likes"]
+        >= 1000 else hate_metrics["likes"] }}</span
+      >
+      <span class="metric retweets"
+        ><i class="fas fa-retweet icon"></i>{{
+        "{:.1f}M".format(hate_metrics["retweets"] / 1_000_000) if
+        hate_metrics["retweets"] >= 1_000_000 else
+        "{:.1f}K".format(hate_metrics["retweets"] / 1_000) if
+        hate_metrics["retweets"] >= 1000 else hate_metrics["retweets"] }}</span
+      >
+      <span class="metric replies"
+        ><i class="fas fa-reply icon"></i>{{
+        "{:.1f}M".format(hate_metrics["replies"] / 1_000_000) if
+        hate_metrics["replies"] >= 1_000_000 else
+        "{:.1f}K".format(hate_metrics["replies"] / 1_000) if
+        hate_metrics["replies"] >= 1000 else hate_metrics["replies"] }}</span
+      >
+      <span class="metric impressions"
+        ><i class="fas fa-eye icon"></i>{{
+        "{:.1f}M".format(hate_metrics["impressions"] / 1_000_000) if
+        hate_metrics["impressions"] >= 1_000_000 else
+        "{:.1f}K".format(hate_metrics["impressions"] / 1_000) if
+        hate_metrics["impressions"] >= 1000 else hate_metrics["impressions"]
+        }}</span
+      >
+    </p>
+  </div>
+  {% endif %} {% if acc_graph %}
+  <div class="tweet-card summary">
+    <p class="network-text">
+      Network representing most hateful words used in the classified hateful
+      tweets
+    </p>
+    <img
+      src="{{ url_for('static', filename='graphs/' + acc_graph) }}"
+      alt="Graph of Co-occurring Words"
+      class="graph-image"
+    />
+    <div class="legend">
+      <p>
+        <span class="red-node"></span> Highest degree (highest number of
+        connections)
+      </p>
+      <p><span class="large-node"></span> Larger hate probability</p>
+    </div>
+  </div>
+  {% endif %}
+  <div class="tweet-card summary">
+    <p class="network-text">Hateful vs Neutral Tweets Over Time</p>
+    <img
+      src="{{ url_for('static', filename='graphs/' + acc_line_graph) }}"
+      alt="Line-graph"
+      class="graph-image"
+    />
+  </div>
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+  <!-- This div wraps the button for centering -->
+  <a href="{{ url_for('account')}}" class="btn btn-primary">Home</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var ctx = document.getElementById("tweetChart").getContext("2d");
+    var tweetChart = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: ["Neutral Tweets", "Hateful Tweets"],
+        datasets: [
+          {
+            label: "Tweet Overview",
+            data: [{{ account.neutral_tweets }}, {{ account.hateful_tweets }}],
+            backgroundColor: ["#28a745", "#dc3545"],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom" },
+          tooltip: { enabled: true },
+        },
+      },
+    });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const graphImage = document.querySelector(".graph-image");
+    graphImage.onerror = function () {
+      this.src = "/static/fallback-image.jpg"; // path to a fallback image
+      this.alt = "Failed to load graph image";
+    };
+  });
+</script>
+
+{% endblock %}
