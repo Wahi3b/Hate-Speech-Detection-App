@@ -84,7 +84,7 @@ def graph(acc_id):
         max_degree = max(degrees.values())  # Find the highest degree
         colors = ['#dc3545' if degrees[node] == max_degree  else '#007bff' for node in G.nodes()]
 
-        pos = nx.spring_layout(G, k=2, scale=1)  # Adjust 'k' for more spread
+        pos = nx.spring_layout(G, k=1.1, scale=1)  # Adjust 'k' for more spread
 
         plt.figure(figsize=(12, 12), dpi=300)
         # nx.draw(subG, pos, with_labels=True, node_size=node_sizes, node_color=colors, font_size=16, font_color='black')

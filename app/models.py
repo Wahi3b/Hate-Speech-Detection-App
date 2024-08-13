@@ -9,7 +9,7 @@ model = AutoModelForSequenceClassification.from_pretrained('./roBERTa-model')
 class Account(db.Model):
     __tablename__ = 'accounts'
     account_handler = db.Column(db.String,primary_key=True, nullable=False, unique=True)
-    account_last_fetched = db.Column(db.DateTime,nullable=False) 
+    account_last_fetched = db.Column(db.Date,nullable=False) 
     account_name = db.Column(db.String, nullable=False)
     account_followers = db.Column(db.Integer, nullable=False)
     account_following = db.Column(db.Integer, nullable=False)

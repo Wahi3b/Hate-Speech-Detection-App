@@ -1,6 +1,6 @@
 # Ignore the model directory
 /roBERTa-model/
-
+/app/roBERTa-model
 # Ignore the database files
 *.sqlite3
 *.db

@@ -26,8 +26,6 @@ def account():
             if date_diff.days < 1:
                 image_filename = f"{acc_handler}_graph.jpg"
                 return redirect(url_for('display',acc_handler=acc_handler,acc_graph=image_filename))
-        # if (date.today() - account_fetched.last_fetched_date).days < 7:
-        #     return redirect(url_for('display',acc_handler=acc_handler,fetch=False))
         user_res = user_id(acc_handler)
         if key not in user_res:
             message = "This username doesn't exist, please insert a valid one"
@@ -36,9 +34,16 @@ def account():
         user = user_res["data"]
         user_img = save_img(user["profile_image_url"],acc_handler)
         tweets = fetch(user["id"])
-        neutral_tweets = 0
-        hateful_tweets = 0
+        if account_fetched:
+            neutral_tweets = account_fetched.neutral_tweets
+            hateful_tweets = account_fetched.hateful_tweets
+        else:
+            neutral_tweets = 0
+            hateful_tweets = 0
         for tweet in tweets:
+            tweet_exist = Tweets.query.filter_by(tweet_id=tweet["id"]).first()
+            if tweet_exist:
+                continue 
             cleaned_tweet= clean_data(tweet["text"])
             if cleaned_tweet == "":
                 continue
@@ -62,23 +67,33 @@ def account():
             except Exception as e: 
                 print(e)
                 db.session.rollback()
-              
+        
         total = (neutral_tweets+hateful_tweets)
         perc = (hateful_tweets/total) *100
         if perc > 10:
             account_profile = 'Hateful'
         else: 
             account_profile = 'Neutral'
-        account = Account(account_handler=acc_handler,account_last_fetched = datetime.today().date(),
+        if account_fetched:
+            account_fetched.neutral_tweets = neutral_tweets
+            account_fetched.hateful_tweets = hateful_tweets
+            account_fetched.account_classification = account_profile
+            account_fetched.account_last_fetched = datetime.today().date()
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+        else:
+            account = Account(account_handler=acc_handler,account_last_fetched = datetime.today().date(),
                            account_name=user["name"],account_followers= user["public_metrics"]["followers_count"],
                            account_following=user["public_metrics"]["following_count"],neutral_tweets=neutral_tweets,
                            hateful_tweets=hateful_tweets, account_img=user_img, account_classification=account_profile)
-        db.session.add(account)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-        return redirect(url_for('display',acc_handler=account.account_handler))
+            db.session.add(account)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+        return redirect(url_for('display',acc_handler=acc_handler))
     
     return render_template('account.html', title='Classification', form=form)
 
