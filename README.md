@@ -37,7 +37,7 @@ The fine-tuned model size is too large to be uploaded to Github, it was uploaded
 
 ## To run the application:
 
-Clone the repository (git clone repository-url)
-Create a Virtual Environment
-Install the required packages (pip install -r requirements.txt)
-Run the application (flask run) in your terminal.
+1. Clone the repository (git clone repository-url).
+2. Create a Virtual Environment.
+3. Install the required packages (pip install -r requirements.txt).
+4. Run the application (flask run) in your terminal.
