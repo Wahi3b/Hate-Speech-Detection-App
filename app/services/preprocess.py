@@ -8,20 +8,20 @@ nltk.download('wordnet')
 nltk.download('punkt')
 
 def remove_unwanted_text(content):
-        content = re.sub('@[^\s]+', '', content)  # Remove Twitter handles
-        content = re.sub('http[^\s]+', '', content)  # Remove URLs
-        content = re.sub('www[^\s]+', '', content)  # Remove URLs
-        content = re.sub('#[^\s]+', '', content)  # Remove hashtags
-        content = re.sub('&[^\s]+', '', content)  # Remove HTML entities
-        content = re.sub('rt', '', content)  # Remove HTML entities
+        content = re.sub('@[^\s]+', '', content)  
+        content = re.sub('http[^\s]+', '', content) 
+        content = re.sub('www[^\s]+', '', content) 
+        content = re.sub('#[^\s]+', '', content)  
+        content = re.sub('&[^\s]+', '', content)  
+        content = re.sub('&[^\s]+', '', content)  
         return content
 
 def remove_punctuations(text):
     return re.sub('[^A-Za-z ]+', '', text)
 
 def remove_stop_words(text):
-    sw = stopwords.words("english")  # English Stop Words
-    # Remove punctuation from stopwords to ensure uniform comparison
+    sw = stopwords.words("english") 
+    
     sw = [remove_punctuations(s) for s in sw]
     word_list = text.split()
     return ' '.join([word for word in word_list if word.lower() not in sw])
@@ -37,10 +37,10 @@ def lemmatize_words(text):
     return ' '.join([lemmatizer.lemmatize(word) for word in word_list])
 
 def clean_data(content):
-    content = content.lower()  # Convert to lower case
-    content = remove_unwanted_text(content)  # Remove unwanted text like URLs, handles, etc.
-    content = remove_punctuations(content)  # Remove punctuation
-    content = remove_stop_words(content)  # Remove stopwords
-    content = lemmatize_words(content)  # Lemmatize the words
+    content = content.lower() 
+    content = remove_unwanted_text(content)  
+    content = remove_punctuations(content)  
+    content = remove_stop_words(content)  
+    content = lemmatize_words(content) 
     return content
     

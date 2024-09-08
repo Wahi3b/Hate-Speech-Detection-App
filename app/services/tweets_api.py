@@ -6,12 +6,12 @@ bearer_token = os.environ.get("BEARER_TOKEN")
 
 
 def create_url(user_id):
-    # Replace with user ID below
+    
     return "https://api.twitter.com/2/users/{}/tweets".format(user_id)
 
 
 def get_params():
-    return {"tweet.fields" : "text,id,created_at,public_metrics", "max_results" : "50"}
+    return {"tweet.fields" : "text,id,created_at,public_metrics", "max_results" : "5"}
 
 def bearer_oauth(r):
     r.headers["Authorization"] = f"Bearer {bearer_token}"
@@ -34,4 +34,3 @@ def fetch(user_id):
     params = get_params()
     tweets = connect_to_endpoint(url, params)
     return tweets 
-#  (json.dumps(json_response, indent=4, sort_keys=True))

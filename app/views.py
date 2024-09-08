@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for,request
 from app import app, db
 from app.forms import AccountForm
-from app.models import tokenizer,model,Account,Tweets,Explainable
+from app.models import tokenizer,model,Account,Tweets
 from app.services.preprocess import clean_data
 from app.services.tweets_api import fetch
 from app.services.user_id import user_id

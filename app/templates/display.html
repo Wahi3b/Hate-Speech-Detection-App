@@ -88,8 +88,7 @@
   {% endif %} {% if acc_graph %}
   <div class="tweet-card summary">
     <p class="network-text">
-      Network representing most hateful words used in the classified hateful
-      tweets
+      Network representing most hateful words used across different tweets
     </p>
     <img
       src="{{ url_for('static', filename='graphs/' + acc_graph) }}"
@@ -101,7 +100,7 @@
         <span class="red-node"></span> Highest degree (highest number of
         connections)
       </p>
-      <p><span class="large-node"></span> Larger hate probability</p>
+      <p><span class="large-node"></span>Node size ∝ hate probability</p>
     </div>
   </div>
   {% endif %}

@@ -30,3 +30,14 @@ This Flask application is designed to detect hate speech in tweets from a specif
 2. **Fetch Tweets**: The application uses the Twitter API to fetch a specified number of recent tweets from the provided handle.
 3. **Classification**: The fetched tweets are classified using a pre-trained RoBERTa model to determine if they contain hate speech.
 4. **Display Results**: The results, including user information, metrics on hate speech, and a LIME-generated network of the most frequently used hate words, are displayed on the web page.
+
+## Note
+
+The fine-tuned model size is too large to be uploaded to Github, it was uploaded to hugging face website instead, please visit this link https://huggingface.co/Wahi3b/RoBERTa_Hate_Speech_Detection/tree/main for the model files, download all files, place them in a directory called roBERTa-model inside the /app directory
+
+## To run the application:
+
+Clone the repository (git clone repository-url)
+Create a Virtual Environment
+Install the required packages (pip install -r requirements.txt)
+Run the application (flask run) in your terminal.

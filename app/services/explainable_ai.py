@@ -29,7 +29,7 @@ def generate_lime_explanation(text, tweet_id):
     hateful_index = explanation.class_names.index("Hateful")
     local_exp_hateful = dict(explanation.local_exp[hateful_index])
 
-    # Initialize an empty list to hold words to be added
+    
     words_to_add = []
     for i, weight in local_exp_hateful.items():
         if weight > 0:
@@ -37,7 +37,7 @@ def generate_lime_explanation(text, tweet_id):
             add_word = Explainable(tweet_id=tweet_id, tweet_word=word, word_probability=weight)
             words_to_add.append(add_word)
 
-    # Add all words to the session
+   
     db.session.add_all(words_to_add)
     try:
         db.session.commit()
@@ -46,7 +46,7 @@ def generate_lime_explanation(text, tweet_id):
         db.session.rollback()
 
 def predict_proba(texts):
-    # Assuming the model and tokenizer are already loaded and available
+    
     inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=128).to(model.device)
     with torch.no_grad():
         outputs = model(**inputs)
@@ -62,7 +62,6 @@ def graph(acc_id):
                 if G.has_node(word.tweet_word):
                     current_prob = G.nodes[word.tweet_word].get('prob', 0) 
                     if word.word_probability > current_prob:
-                        # Update the probability only if the new one is greater
                         G.nodes[word.tweet_word]['prob'] = word.word_probability
                 else:
                     G.add_node(word.tweet_word, prob=word.word_probability)
@@ -73,12 +72,11 @@ def graph(acc_id):
         # degrees = dict(G.degree())
         # top_nodes = sorted(degrees, key=degrees.get, reverse=True)[:20]
         # subG = G.subgraph(top_nodes)
-        # Calculate node sizes based on word_probability
-        min_size = 1000  # Minimum size for visibility
-        max_size = 5000  # Maximum size for the highest probability
+        min_size = 1000  
+        max_size = 5000  
         node_sizes = [(G.nodes[node]['prob'] * (max_size - min_size)) + min_size for node in G]
 
-        # Prepare colors based on degree (optional)
+        
         degrees = dict(G.degree())
         # max_degree = max(degrees[node] for node in subG.nodes()) 
         max_degree = max(degrees.values())  # Find the highest degree
@@ -101,25 +99,24 @@ def graph(acc_id):
 
 def create_line_graph(acc_handler):
     print(acc_handler)
-    # Query to get tweet counts by date for a specific account, grouped by sentiment
     tweet_counts = Tweets.query.with_entities(
         func.date(Tweets.tweet_date).label('tweet_date'),
         Tweets.tweet_sentiment,
         db.func.count(Tweets.tweet_id).label('tweet_count')
         ).filter_by(account_handler=acc_handler).group_by(Tweets.tweet_date, Tweets.tweet_sentiment).all()
     print(tweet_counts)
-    # Organizing data into a structure for plotting
+    
     data = {}
     for tweet_date, tweet_sentiment, tweet_count in tweet_counts:
         if tweet_date not in data:
             data[tweet_date] = {'hateful': 0, 'neutral': 0}
-        # Define the mapping of sentiments here, modify as needed
-        if tweet_sentiment == 1:  # Assuming -1 is hateful
+        
+        if tweet_sentiment == 1: 
             data[tweet_date]['hateful'] += tweet_count
-        elif tweet_sentiment == 0:  # Assuming 0 is neutral
+        elif tweet_sentiment == 0:  
             data[tweet_date]['neutral'] += tweet_count
 
-    # Prepare data for plotting
+    
     dates = sorted(data.keys())
     hateful_counts = [data[date]['hateful'] for date in dates]
     neutral_counts = [data[date]['neutral'] for date in dates]
@@ -127,7 +124,7 @@ def create_line_graph(acc_handler):
     print(hateful_counts)
     print(neutral_counts)
 
-    # Plotting
+    
     plt.figure(figsize=(12, 12))
     plt.plot(dates, hateful_counts, 'ro-', linewidth=2, markersize=10, label='Hateful Tweets')
     plt.plot(dates, neutral_counts, 'go-', linewidth=2, markersize=10, label='Neutral Tweets')
@@ -138,9 +135,9 @@ def create_line_graph(acc_handler):
     plt.xticks(rotation=45)
     plt.tight_layout()
 
-    # Saving the plot
+    
     directory_path = os.path.join(current_app.root_path, 'static', 'graphs')
-    os.makedirs(directory_path, exist_ok=True)  # Ensure the directory exists
+    os.makedirs(directory_path, exist_ok=True)  
     image_filename = f"{acc_handler}_line_graph.jpg"
     full_image_path = os.path.join(directory_path, image_filename)
     plt.savefig(full_image_path)
