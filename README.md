@@ -23,6 +23,9 @@ This Flask application is designed to detect hate speech in tweets from a specif
 - **app/tweet-api.py**: Manages the interaction with the Twitter API, fetching tweets based on the specified user handle.
 - **app/templates/**: Contains the HTML templates for the web pages.
 - **app/static/css/**: Contains the CSS files for styling the web pages.
+- **NB_Model**: Notebook that contains the code for training the NB model.
+- **roBERTa_Model**: Notebook that contains the code for training the roBERTa model.
+
 
 ## How It Works
 
@@ -34,8 +37,7 @@ This Flask application is designed to detect hate speech in tweets from a specif
 ## Note
 
 The fine-tuned model size is too large to be uploaded to Github, it was uploaded to hugging face website instead, please visit this link https://huggingface.co/Wahi3b/RoBERTa_Hate_Speech_Detection/tree/main for the model files, download all files, place them in a directory called roBERTa-model inside the /app directory.
-**NB_Model**: Notebook that contains the code for training the NB model
-**roBERTa_Model**: Notebook that contains the code for training the roBERTa model
+
 
 ## To run the application:
 
