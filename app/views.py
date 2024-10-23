@@ -23,7 +23,7 @@ def account():
             fetched_date = account_fetched.account_last_fetched
             current_date = datetime.today().date()
             date_diff = current_date - fetched_date
-            if date_diff.days < 1:
+            if date_diff.days < 100:
                 image_filename = f"{acc_handler}_graph.jpg"
                 return redirect(url_for('display',acc_handler=acc_handler,acc_graph=image_filename))
         user_res = user_id(acc_handler)
